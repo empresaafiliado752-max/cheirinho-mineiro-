@@ -132,7 +132,8 @@ export default function App() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get('dev') === 'true') {
+    // Only enable dev mode if explicitly requested via URL
+    if (params.get('admin') === 'true' || params.get('dev') === 'true') {
       setIsDev(true);
     }
 
@@ -236,15 +237,15 @@ export default function App() {
 
   return (
     <div className="min-h-screen pb-20">
-      {/* Dev Toggle Button */}
+      {/* Dev Toggle Button - Hidden unless in dev mode */}
       {isDev && (
         <button 
           onClick={() => setShowDevPanel(true)}
           aria-label="Abrir Painel do Desenvolvedor"
-          className="fixed top-6 right-6 z-[60] p-4 bg-coffee-900 text-white rounded-2xl shadow-2xl hover:scale-110 transition-transform flex items-center gap-2"
+          className="fixed top-6 right-6 z-[60] p-4 bg-coffee-900/10 hover:bg-coffee-900 text-coffee-900/20 hover:text-white rounded-2xl shadow-sm hover:shadow-2xl transition-all flex items-center gap-2"
         >
           <Settings size={20} />
-          <span className="hidden md:inline font-bold text-xs uppercase tracking-widest">Painel Dev</span>
+          <span className="hidden md:inline font-bold text-xs uppercase tracking-widest">Painel Admin</span>
         </button>
       )}
 

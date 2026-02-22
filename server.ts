@@ -44,8 +44,8 @@ try {
 
 // Seed some initial recipes if empty
 const rowCount = db.prepare("SELECT COUNT(*) as count FROM recipes").get() as { count: number };
-console.log(`Database has ${rowCount.count} recipes.`);
 if (rowCount.count === 0) {
+  console.log("Database is empty. Seeding initial recipes...");
   const initialRecipes = [
     {
       name: "Café Coado no Pano",
@@ -139,7 +139,6 @@ if (rowCount.count === 0) {
   `);
 
   for (const recipe of initialRecipes) {
-    console.log(`Inserting recipe: ${recipe.name}`);
     insert.run(recipe);
   }
 }
@@ -153,7 +152,6 @@ async function startServer() {
   // API Routes
   app.get("/api/recipes", (req, res) => {
     const { search, category, equipment } = req.query;
-    console.log(`GET /api/recipes - search: ${search}, category: ${category}`);
     let query = `
       SELECT r.*, COALESCE(o.image_url, r.image_url) as display_image 
       FROM recipes r
@@ -173,7 +171,6 @@ async function startServer() {
     }
 
     const recipes = db.prepare(query).all(...params);
-    console.log(`Raw DB result: ${recipes.length} items`);
     
     // Parse JSON fields
     const parsedRecipes = recipes.map((r: any) => ({
@@ -184,7 +181,6 @@ async function startServer() {
       is_brazilian: !!r.is_brazilian
     }));
 
-    console.log(`Returning ${parsedRecipes.length} recipes`);
     res.json(parsedRecipes);
   });
 
