@@ -59,7 +59,7 @@ export default function App() {
       const data = await res.json();
       setRecipes(data);
     } catch (err) {
-      // Silent fail to avoid cluttering dev panel
+      console.error("Failed to fetch recipes", err);
     } finally {
       setLoading(false);
     }
