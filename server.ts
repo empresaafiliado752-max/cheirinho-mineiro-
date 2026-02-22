@@ -42,9 +42,10 @@ try {
   db.exec("ALTER TABLE recipes ADD COLUMN history TEXT");
 } catch (e) {}
 
-// Seed some initial recipes if empty
-const rowCount = db.prepare("SELECT COUNT(*) as count FROM recipes").get() as { count: number };
-if (rowCount.count === 0) {
+function seedDatabase() {
+  const rowCount = db.prepare("SELECT COUNT(*) as count FROM recipes").get() as { count: number };
+  if (rowCount.count > 0) return;
+
   console.log("Database is empty. Seeding initial recipes...");
   const initialRecipes = [
     {
@@ -143,11 +144,24 @@ if (rowCount.count === 0) {
   }
 }
 
+seedDatabase();
+
 async function startServer() {
   const app = express();
   const PORT = 3000;
 
   app.use(express.json({ limit: '10mb' }));
+
+  // Manual Seed Route (Troubleshooting)
+  app.post("/api/dev/seed", (req, res) => {
+    try {
+      seedDatabase();
+      const rowCount = db.prepare("SELECT COUNT(*) as count FROM recipes").get() as { count: number };
+      res.json({ message: "Seed process completed", count: rowCount.count });
+    } catch (err) {
+      res.status(500).json({ error: "Seed failed" });
+    }
+  });
 
   // API Routes
   app.get("/api/recipes", (req, res) => {

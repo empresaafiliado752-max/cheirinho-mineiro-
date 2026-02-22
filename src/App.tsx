@@ -242,7 +242,7 @@ export default function App() {
         <button 
           onClick={() => setShowDevPanel(true)}
           aria-label="Abrir Painel do Desenvolvedor"
-          className="fixed top-6 right-6 z-[60] p-4 bg-coffee-900/10 hover:bg-coffee-900 text-coffee-900/20 hover:text-white rounded-2xl shadow-sm hover:shadow-2xl transition-all flex items-center gap-2"
+          className="fixed top-6 right-6 z-[60] p-2 bg-coffee-900/5 hover:bg-coffee-900 text-coffee-900/10 hover:text-white rounded-xl shadow-none hover:shadow-xl transition-all flex items-center gap-2"
         >
           <Settings size={20} />
           <span className="hidden md:inline font-bold text-xs uppercase tracking-widest">Painel Admin</span>
@@ -451,7 +451,14 @@ export default function App() {
             <h3 className="text-2xl font-serif text-coffee-900 mb-2">Nenhuma receita encontrada</h3>
             <p className="text-coffee-600 italic mb-6">Tente buscar por outros termos ou categorias.</p>
             <button 
-              onClick={() => {setSearch(''); setSelectedCategory('Todos'); fetchRecipes();}}
+              onClick={async () => {
+                setSearch(''); 
+                setSelectedCategory('Todos'); 
+                if (recipes.length === 0) {
+                  await fetch('/api/dev/seed', { method: 'POST' });
+                }
+                fetchRecipes();
+              }}
               className="px-8 py-3 bg-coffee-900 text-white rounded-full font-bold uppercase tracking-widest hover:bg-coffee-950 transition-colors"
             >
               Ver Todas as Receitas
