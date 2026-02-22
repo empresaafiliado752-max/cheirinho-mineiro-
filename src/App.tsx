@@ -56,10 +56,11 @@ export default function App() {
   const fetchRecipes = useCallback(async () => {
     try {
       const res = await fetch('/api/recipes');
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const data = await res.json();
       setRecipes(data);
     } catch (err) {
-      console.error("Failed to fetch recipes", err);
+      console.error("Failed to fetch recipes:", err);
     } finally {
       setLoading(false);
     }
@@ -97,15 +98,15 @@ export default function App() {
           const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
           const weatherData = await weatherRes.json();
           
-          // Fetch City Name (Nominatim)
+          // Fetch City Name (Nominatim) - Using a more specific User-Agent
           const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`, {
             headers: {
-              'User-Agent': 'CheirinhoMineiroApp/1.0'
+              'User-Agent': 'CheirinhoMineiroApp_v1_Production'
             }
           });
           const geoData = await geoRes.json();
           
-          const city = geoData.address?.city || geoData.address?.town || geoData.address?.village || 'Sua Localização';
+          const city = geoData.address?.city || geoData.address?.town || geoData.address?.village || geoData.display_name?.split(',')[0] || 'Sua Localização';
           const temp = Math.round(weatherData.current_weather.temperature);
           const code = weatherData.current_weather.weathercode;
           
@@ -132,9 +133,6 @@ export default function App() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('dev') === 'true') {
-      setIsDev(true);
-      localStorage.setItem('cheirinho_mineiro_dev', 'true');
-    } else if (localStorage.getItem('cheirinho_mineiro_dev') === 'true') {
       setIsDev(true);
     }
 
@@ -450,7 +448,13 @@ export default function App() {
           <div className="text-center py-20">
             <Coffee size={48} className="mx-auto text-coffee-200 mb-4" />
             <h3 className="text-2xl font-serif text-coffee-900 mb-2">Nenhuma receita encontrada</h3>
-            <p className="text-coffee-600 italic">Tente buscar por outros termos ou categorias.</p>
+            <p className="text-coffee-600 italic mb-6">Tente buscar por outros termos ou categorias.</p>
+            <button 
+              onClick={() => {setSearch(''); setSelectedCategory('Todos'); fetchRecipes();}}
+              className="px-8 py-3 bg-coffee-900 text-white rounded-full font-bold uppercase tracking-widest hover:bg-coffee-950 transition-colors"
+            >
+              Ver Todas as Receitas
+            </button>
           </div>
         )}
       </main>

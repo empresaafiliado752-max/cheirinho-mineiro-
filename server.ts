@@ -139,6 +139,7 @@ if (rowCount.count === 0) {
   `);
 
   for (const recipe of initialRecipes) {
+    console.log(`Inserting recipe: ${recipe.name}`);
     insert.run(recipe);
   }
 }
@@ -172,6 +173,7 @@ async function startServer() {
     }
 
     const recipes = db.prepare(query).all(...params);
+    console.log(`Raw DB result: ${recipes.length} items`);
     
     // Parse JSON fields
     const parsedRecipes = recipes.map((r: any) => ({
