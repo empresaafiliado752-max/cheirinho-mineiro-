@@ -58,6 +58,7 @@ export default function App() {
       const res = await fetch('/api/recipes');
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const data = await res.json();
+      console.log("Recipes received from API:", data);
       setRecipes(data);
     } catch (err) {
       console.error("Failed to fetch recipes:", err);
@@ -148,12 +149,14 @@ export default function App() {
   }, [weather, recipes, aiSuggestion, getAiSuggestion]);
 
   const filteredRecipes = useMemo(() => {
-    return recipes.filter(r => {
+    const filtered = recipes.filter(r => {
       const matchesSearch = r.name.toLowerCase().includes(search.toLowerCase()) || 
                             r.description.toLowerCase().includes(search.toLowerCase());
       const matchesCategory = selectedCategory === 'Todos' || r.category === selectedCategory;
       return matchesSearch && matchesCategory;
     });
+    console.log("Filtered recipes count:", filtered.length, "out of", recipes.length);
+    return filtered;
   }, [recipes, search, selectedCategory]);
 
   const handleImageUpload = useCallback(async (recipeId: number, e: React.ChangeEvent<HTMLInputElement>) => {
@@ -449,20 +452,39 @@ export default function App() {
           <div className="text-center py-20">
             <Coffee size={48} className="mx-auto text-coffee-200 mb-4" />
             <h3 className="text-2xl font-serif text-coffee-900 mb-2">Nenhuma receita encontrada</h3>
+            <p className="text-coffee-600 italic mb-2">Total de receitas carregadas: {recipes.length}</p>
             <p className="text-coffee-600 italic mb-6">Tente buscar por outros termos ou categorias.</p>
-            <button 
-              onClick={async () => {
-                setSearch(''); 
-                setSelectedCategory('Todos'); 
-                if (recipes.length === 0) {
-                  await fetch('/api/dev/seed', { method: 'POST' });
-                }
-                fetchRecipes();
-              }}
-              className="px-8 py-3 bg-coffee-900 text-white rounded-full font-bold uppercase tracking-widest hover:bg-coffee-950 transition-colors"
-            >
-              Ver Todas as Receitas
-            </button>
+            <div className="flex flex-wrap justify-center gap-4">
+              <button 
+                onClick={async () => {
+                  setSearch(''); 
+                  setSelectedCategory('Todos'); 
+                  if (recipes.length === 0) {
+                    const seedRes = await fetch('/api/dev/seed', { method: 'POST' });
+                    const seedData = await seedRes.json();
+                    alert(`Seed result: ${JSON.stringify(seedData)}`);
+                  }
+                  fetchRecipes();
+                }}
+                className="px-8 py-3 bg-coffee-900 text-white rounded-full font-bold uppercase tracking-widest hover:bg-coffee-950 transition-colors"
+              >
+                Ver Todas as Receitas
+              </button>
+              <button 
+                onClick={async () => {
+                  if (confirm("Isso irá resetar o banco de dados. Continuar?")) {
+                    setLoading(true);
+                    const res = await fetch('/api/dev/seed?force=true', { method: 'POST' });
+                    const data = await res.json();
+                    alert(`Reset result: ${JSON.stringify(data)}`);
+                    fetchRecipes();
+                  }
+                }}
+                className="px-8 py-3 bg-white border-2 border-coffee-900 text-coffee-900 rounded-full font-bold uppercase tracking-widest hover:bg-coffee-50 transition-colors"
+              >
+                Forçar Reset do Banco
+              </button>
+            </div>
           </div>
         )}
       </main>

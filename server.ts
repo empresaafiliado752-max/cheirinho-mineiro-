@@ -7,7 +7,9 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const db = new Database("recipes.db");
+const dbPath = path.join(__dirname, "recipes_v2.db");
+console.log(`Using database at: ${dbPath}`);
+const db = new Database(dbPath);
 
 // Initialize DB
 db.exec(`
@@ -43,7 +45,9 @@ try {
 } catch (e) {}
 
 function seedDatabase() {
+  console.log("Checking if database needs seeding...");
   const rowCount = db.prepare("SELECT COUNT(*) as count FROM recipes").get() as { count: number };
+  console.log(`Current recipe count: ${rowCount.count}`);
   if (rowCount.count > 0) return;
 
   console.log("Database is empty. Seeding initial recipes...");
@@ -140,8 +144,13 @@ function seedDatabase() {
   `);
 
   for (const recipe of initialRecipes) {
-    insert.run(recipe);
+    try {
+      insert.run(recipe);
+    } catch (err) {
+      console.error(`Failed to insert recipe ${recipe.name}:`, err);
+    }
   }
+  console.log("Seeding finished.");
 }
 
 seedDatabase();
@@ -151,15 +160,32 @@ async function startServer() {
   const PORT = 3000;
 
   app.use(express.json({ limit: '10mb' }));
+  
+  app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    next();
+  });
 
-  // Manual Seed Route (Troubleshooting)
+  // Debug Route
+  app.get("/api/dev/debug-db", (req, res) => {
+    try {
+      const recipes = db.prepare("SELECT * FROM recipes").all();
+      res.json({ count: recipes.length, recipes });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
   app.post("/api/dev/seed", (req, res) => {
     try {
+      if (req.query.force === 'true') {
+        db.prepare("DELETE FROM recipes").run();
+        db.prepare("DELETE FROM dev_overrides").run();
+      }
       seedDatabase();
       const rowCount = db.prepare("SELECT COUNT(*) as count FROM recipes").get() as { count: number };
       res.json({ message: "Seed process completed", count: rowCount.count });
     } catch (err) {
-      res.status(500).json({ error: "Seed failed" });
+      res.status(500).json({ error: "Seed failed", details: err.message });
     }
   });
 
@@ -184,17 +210,27 @@ async function startServer() {
       params.push(category);
     }
 
+    console.log(`Executing query: ${query} with params:`, params);
     const recipes = db.prepare(query).all(...params);
+    console.log(`Found ${recipes.length} recipes in DB`);
     
-    // Parse JSON fields
-    const parsedRecipes = recipes.map((r: any) => ({
-      ...r,
-      ingredients: JSON.parse(r.ingredients),
-      steps: JSON.parse(r.steps),
-      equipment: JSON.parse(r.equipment),
-      is_brazilian: !!r.is_brazilian
-    }));
+    // Parse JSON fields with error handling
+    const parsedRecipes = recipes.map((r: any) => {
+      try {
+        return {
+          ...r,
+          ingredients: typeof r.ingredients === 'string' ? JSON.parse(r.ingredients) : (r.ingredients || []),
+          steps: typeof r.steps === 'string' ? JSON.parse(r.steps) : (r.steps || []),
+          equipment: typeof r.equipment === 'string' ? JSON.parse(r.equipment) : (r.equipment || []),
+          is_brazilian: !!r.is_brazilian
+        };
+      } catch (e) {
+        console.error(`Error parsing recipe ${r.id}:`, e);
+        return null;
+      }
+    }).filter(r => r !== null);
 
+    console.log(`Returning ${parsedRecipes.length} parsed recipes`);
     res.json(parsedRecipes);
   });
 
