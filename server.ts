@@ -2,6 +2,7 @@ import express from "express";
 import { createServer as createViteServer } from "vite";
 import Database from "better-sqlite3";
 import path from "path";
+import fs from "fs";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -329,6 +330,49 @@ async function startServer() {
       res.json({ success: true });
     } catch (err) {
       res.status(500).json({ error: "Failed to update recipe" });
+    }
+  });
+
+  // Import Dataset (Dev only)
+  app.post("/api/dev/import-dataset", async (req, res) => {
+    try {
+      const dataPath = path.join(__dirname, "data", "cafes_100_receitas.json");
+      if (!fs.existsSync(dataPath)) {
+        return res.status(404).json({ error: "Dataset file not found" });
+      }
+      
+      const fileContent = fs.readFileSync(dataPath, 'utf8');
+      const recipes = JSON.parse(fileContent);
+      
+      const insert = db.prepare(`
+        INSERT INTO recipes (name, description, ingredients, steps, difficulty, prep_time, equipment, image_url, category, is_brazilian, country, history)
+        VALUES (@name, @description, @ingredients, @steps, @difficulty, @prep_time, @equipment, @image_url, @category, @is_brazilian, @country, @history)
+      `);
+      
+      const transaction = db.transaction((recipesToInsert) => {
+        for (const r of recipesToInsert) {
+          insert.run({
+            name: r.nome || r.name,
+            description: r.descricao || r.description || "",
+            ingredients: JSON.stringify(r.ingredientes || r.ingredients || []),
+            steps: JSON.stringify(r.passos || r.steps || []),
+            difficulty: r.dificuldade || r.difficulty || "Fácil",
+            prep_time: r.tempoPreparo || r.prep_time || "5 min",
+            equipment: JSON.stringify(r.utensilios || r.equipment || []),
+            image_url: r.image_url || `https://picsum.photos/seed/${Math.random()}/800/600`,
+            category: r.categoria || r.category || "Tradicional",
+            is_brazilian: r.is_brazilian ? 1 : 0,
+            country: r.pais || r.country || "",
+            history: r.historia || r.history || ""
+          });
+        }
+      });
+      
+      transaction(recipes);
+      res.json({ success: true, count: recipes.length });
+    } catch (err) {
+      console.error("Import failed:", err);
+      res.status(500).json({ error: err.message });
     }
   });
 

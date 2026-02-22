@@ -113,15 +113,22 @@ export default function App() {
           const weatherData = await weatherRes.json();
           
           console.log("fetchWeather: Fetching city name...");
-          // Fetch City Name (Nominatim) - Using a more specific User-Agent
-          const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`, {
-            headers: {
-              'User-Agent': 'CheirinhoMineiroApp_v1_Production'
+          // Fetch City Name (Nominatim) - Using a more specific User-Agent and fallback
+          let city = 'Sua Localização';
+          try {
+            const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`, {
+              headers: {
+                'User-Agent': 'CheirinhoMineiroApp_v1_Production'
+              }
+            });
+            if (geoRes.ok) {
+              const geoData = await geoRes.json();
+              city = geoData.address?.city || geoData.address?.town || geoData.address?.village || geoData.display_name?.split(',')[0] || 'Sua Localização';
             }
-          });
-          const geoData = await geoRes.json();
+          } catch (e) {
+            console.warn("fetchWeather: Nominatim failed, using fallback city name", e);
+          }
           
-          const city = geoData.address?.city || geoData.address?.town || geoData.address?.village || geoData.display_name?.split(',')[0] || 'Sua Localização';
           const temp = Math.round(weatherData.current_weather.temperature);
           const code = weatherData.current_weather.weathercode;
           
@@ -251,6 +258,23 @@ export default function App() {
       }
     } catch (err) {
       alert("Erro ao limpar banco de dados");
+    }
+  }, [fetchRecipes]);
+
+  const handleImportDataset = useCallback(async () => {
+    if (!confirm("Deseja importar as receitas do arquivo JSON?")) return;
+    try {
+      const res = await fetch('/api/dev/import-dataset', { method: 'POST' });
+      if (res.ok) {
+        const data = await res.json();
+        fetchRecipes();
+        alert(`Sucesso! ${data.count} receitas importadas.`);
+      } else {
+        const err = await res.json();
+        alert(`Erro: ${err.error}`);
+      }
+    } catch (err) {
+      alert("Erro ao importar dataset");
     }
   }, [fetchRecipes]);
 
@@ -805,6 +829,13 @@ export default function App() {
                       className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl hover:bg-emerald-600 hover:text-white transition-all flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"
                     >
                       <Plus size={14} /> Nova
+                    </button>
+                    <button 
+                      onClick={handleImportDataset}
+                      className="p-3 bg-blue-50 text-blue-600 rounded-2xl hover:bg-blue-600 hover:text-white transition-all flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"
+                      title="Importar de /data/cafes_100_receitas.json"
+                    >
+                      <Database size={14} /> Importar
                     </button>
                     <button 
                       onClick={handleClearDatabase}

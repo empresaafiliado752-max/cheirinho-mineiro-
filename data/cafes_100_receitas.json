@@ -1,0 +1,602 @@
+[
+  {
+    "id": 1,
+    "nome": "Receita de Café 1",
+    "categoria": "Cafés Especiais",
+    "descricao": "Uma bebida de café equilibrada e aromática perfeita para momentos de pausa.",
+    "historia": "Inspirada na cultura das cafeterias artesanais, cada xícara convida a desacelerar e apreciar o aroma e o calor do café recém‑preparado.",
+    "pais": "Internacional",
+    "tempoPreparo": "5 min",
+    "dificuldade": "Fácil",
+    "ingredientes": [
+      "1 xícara de café preparado",
+      "Leite ou complemento opcional",
+      "Açúcar ou adoçante a gosto"
+    ],
+    "passos": [
+      "Prepare o café da sua preferência",
+      "Adicione complementos se desejar",
+      "Misture e sirva quente"
+    ],
+    "utensilios": [
+      "Xícara",
+      "Colher",
+      "Método de preparo de café"
+    ],
+    "tags": [
+      "quente",
+      "aromatico",
+      "cafe"
+    ]
+  },
+  {
+    "id": 2,
+    "nome": "Receita de Café 2",
+    "categoria": "Cafés Especiais",
+    "descricao": "Uma bebida de café equilibrada e aromática perfeita para momentos de pausa.",
+    "historia": "Inspirada na cultura das cafeterias artesanais, cada xícara convida a desacelerar e apreciar o aroma e o calor do café recém‑preparado.",
+    "pais": "Internacional",
+    "tempoPreparo": "5 min",
+    "dificuldade": "Fácil",
+    "ingredientes": [
+      "1 xícara de café preparado",
+      "Leite ou complemento opcional",
+      "Açúcar ou adoçante a gosto"
+    ],
+    "passos": [
+      "Prepare o café da sua preferência",
+      "Adicione complementos se desejar",
+      "Misture e sirva quente"
+    ],
+    "utensilios": [
+      "Xícara",
+      "Colher",
+      "Método de preparo de café"
+    ],
+    "tags": [
+      "quente",
+      "aromatico",
+      "cafe"
+    ]
+  },
+  {
+    "id": 3,
+    "nome": "Receita de Café 3",
+    "categoria": "Cafés Especiais",
+    "descricao": "Uma bebida de café equilibrada e aromática perfeita para momentos de pausa.",
+    "historia": "Inspirada na cultura das cafeterias artesanais, cada xícara convida a desacelerar e apreciar o aroma e o calor do café recém‑preparado.",
+    "pais": "Internacional",
+    "tempoPreparo": "5 min",
+    "dificuldade": "Fácil",
+    "ingredientes": [
+      "1 xícara de café preparado",
+      "Leite ou complemento opcional",
+      "Açúcar ou adoçante a gosto"
+    ],
+    "passos": [
+      "Prepare o café da sua preferência",
+      "Adicione complementos se desejar",
+      "Misture e sirva quente"
+    ],
+    "utensilios": [
+      "Xícara",
+      "Colher",
+      "Método de preparo de café"
+    ],
+    "tags": [
+      "quente",
+      "aromatico",
+      "cafe"
+    ]
+  },
+  {
+    "id": 4,
+    "nome": "Receita de Café 4",
+    "categoria": "Cafés Especiais",
+    "descricao": "Uma bebida de café equilibrada e aromática perfeita para momentos de pausa.",
+    "historia": "Inspirada na cultura das cafeterias artesanais, cada xícara convida a desacelerar e apreciar o aroma e o calor do café recém‑preparado.",
+    "pais": "Internacional",
+    "tempoPreparo": "5 min",
+    "dificuldade": "Fácil",
+    "ingredientes": [
+      "1 xícara de café preparado",
+      "Leite ou complemento opcional",
+      "Açúcar ou adoçante a gosto"
+    ],
+    "passos": [
+      "Prepare o café da sua preferência",
+      "Adicione complementos se desejar",
+      "Misture e sirva quente"
+    ],
+    "utensilios": [
+      "Xícara",
+      "Colher",
+      "Método de preparo de café"
+    ],
+    "tags": [
+      "quente",
+      "aromatico",
+      "cafe"
+    ]
+  },
+  {
+    "id": 5,
+    "nome": "Receita de Café 5",
+    "categoria": "Cafés Especiais",
+    "descricao": "Uma bebida de café equilibrada e aromática perfeita para momentos de pausa.",
+    "historia": "Inspirada na cultura das cafeterias artesanais, cada xícara convida a desacelerar e apreciar o aroma e o calor do café recém‑preparado.",
+    "pais": "Internacional",
+    "tempoPreparo": "5 min",
+    "dificuldade": "Fácil",
+    "ingredientes": [
+      "1 xícara de café preparado",
+      "Leite ou complemento opcional",
+      "Açúcar ou adoçante a gosto"
+    ],
+    "passos": [
+      "Prepare o café da sua preferência",
+      "Adicione complementos se desejar",
+      "Misture e sirva quente"
+    ],
+    "utensilios": [
+      "Xícara",
+      "Colher",
+      "Método de preparo de café"
+    ],
+    "tags": [
+      "quente",
+      "aromatico",
+      "cafe"
+    ]
+  },
+  {
+    "id": 6,
+    "nome": "Receita de Café 6",
+    "categoria": "Cafés Especiais",
+    "descricao": "Uma bebida de café equilibrada e aromática perfeita para momentos de pausa.",
+    "historia": "Inspirada na cultura das cafeterias artesanais, cada xícara convida a desacelerar e apreciar o aroma e o calor do café recém‑preparado.",
+    "pais": "Internacional",
+    "tempoPreparo": "5 min",
+    "dificuldade": "Fácil",
+    "ingredientes": [
+      "1 xícara de café preparado",
+      "Leite ou complemento opcional",
+      "Açúcar ou adoçante a gosto"
+    ],
+    "passos": [
+      "Prepare o café da sua preferência",
+      "Adicione complementos se desejar",
+      "Misture e sirva quente"
+    ],
+    "utensilios": [
+      "Xícara",
+      "Colher",
+      "Método de preparo de café"
+    ],
+    "tags": [
+      "quente",
+      "aromatico",
+      "cafe"
+    ]
+  },
+  {
+    "id": 7,
+    "nome": "Receita de Café 7",
+    "categoria": "Cafés Especiais",
+    "descricao": "Uma bebida de café equilibrada e aromática perfeita para momentos de pausa.",
+    "historia": "Inspirada na cultura das cafeterias artesanais, cada xícara convida a desacelerar e apreciar o aroma e o calor do café recém‑preparado.",
+    "pais": "Internacional",
+    "tempoPreparo": "5 min",
+    "dificuldade": "Fácil",
+    "ingredientes": [
+      "1 xícara de café preparado",
+      "Leite ou complemento opcional",
+      "Açúcar ou adoçante a gosto"
+    ],
+    "passos": [
+      "Prepare o café da sua preferência",
+      "Adicione complementos se desejar",
+      "Misture e sirva quente"
+    ],
+    "utensilios": [
+      "Xícara",
+      "Colher",
+      "Método de preparo de café"
+    ],
+    "tags": [
+      "quente",
+      "aromatico",
+      "cafe"
+    ]
+  },
+  {
+    "id": 8,
+    "nome": "Receita de Café 8",
+    "categoria": "Cafés Especiais",
+    "descricao": "Uma bebida de café equilibrada e aromática perfeita para momentos de pausa.",
+    "historia": "Inspirada na cultura das cafeterias artesanais, cada xícara convida a desacelerar e apreciar o aroma e o calor do café recém‑preparado.",
+    "pais": "Internacional",
+    "tempoPreparo": "5 min",
+    "dificuldade": "Fácil",
+    "ingredientes": [
+      "1 xícara de café preparado",
+      "Leite ou complemento opcional",
+      "Açúcar ou adoçante a gosto"
+    ],
+    "passos": [
+      "Prepare o café da sua preferência",
+      "Adicione complementos se desejar",
+      "Misture e sirva quente"
+    ],
+    "utensilios": [
+      "Xícara",
+      "Colher",
+      "Método de preparo de café"
+    ],
+    "tags": [
+      "quente",
+      "aromatico",
+      "cafe"
+    ]
+  },
+  {
+    "id": 9,
+    "nome": "Receita de Café 9",
+    "categoria": "Cafés Especiais",
+    "descricao": "Uma bebida de café equilibrada e aromática perfeita para momentos de pausa.",
+    "historia": "Inspirada na cultura das cafeterias artesanais, cada xícara convida a desacelerar e apreciar o aroma e o calor do café recém‑preparado.",
+    "pais": "Internacional",
+    "tempoPreparo": "5 min",
+    "dificuldade": "Fácil",
+    "ingredientes": [
+      "1 xícara de café preparado",
+      "Leite ou complemento opcional",
+      "Açúcar ou adoçante a gosto"
+    ],
+    "passos": [
+      "Prepare o café da sua preferência",
+      "Adicione complementos se desejar",
+      "Misture e sirva quente"
+    ],
+    "utensilios": [
+      "Xícara",
+      "Colher",
+      "Método de preparo de café"
+    ],
+    "tags": [
+      "quente",
+      "aromatico",
+      "cafe"
+    ]
+  },
+  {
+    "id": 10,
+    "nome": "Receita de Café 10",
+    "categoria": "Cafés Especiais",
+    "descricao": "Uma bebida de café equilibrada e aromática perfeita para momentos de pausa.",
+    "historia": "Inspirada na cultura das cafeterias artesanais, cada xícara convida a desacelerar e apreciar o aroma e o calor do café recém‑preparado.",
+    "pais": "Internacional",
+    "tempoPreparo": "5 min",
+    "dificuldade": "Fácil",
+    "ingredientes": [
+      "1 xícara de café preparado",
+      "Leite ou complemento opcional",
+      "Açúcar ou adoçante a gosto"
+    ],
+    "passos": [
+      "Prepare o café da sua preferência",
+      "Adicione complementos se desejar",
+      "Misture e sirva quente"
+    ],
+    "utensilios": [
+      "Xícara",
+      "Colher",
+      "Método de preparo de café"
+    ],
+    "tags": [
+      "quente",
+      "aromatico",
+      "cafe"
+    ]
+  },
+  {
+    "id": 11,
+    "nome": "Receita de Café 11",
+    "categoria": "Cafés Especiais",
+    "descricao": "Uma bebida de café equilibrada e aromática perfeita para momentos de pausa.",
+    "historia": "Inspirada na cultura das cafeterias artesanais, cada xícara convida a desacelerar e apreciar o aroma e o calor do café recém‑preparado.",
+    "pais": "Internacional",
+    "tempoPreparo": "5 min",
+    "dificuldade": "Fácil",
+    "ingredientes": [
+      "1 xícara de café preparado",
+      "Leite ou complemento opcional",
+      "Açúcar ou adoçante a gosto"
+    ],
+    "passos": [
+      "Prepare o café da sua preferência",
+      "Adicione complementos se desejar",
+      "Misture e sirva quente"
+    ],
+    "utensilios": [
+      "Xícara",
+      "Colher",
+      "Método de preparo de café"
+    ],
+    "tags": [
+      "quente",
+      "aromatico",
+      "cafe"
+    ]
+  },
+  {
+    "id": 12,
+    "nome": "Receita de Café 12",
+    "categoria": "Cafés Especiais",
+    "descricao": "Uma bebida de café equilibrada e aromática perfeita para momentos de pausa.",
+    "historia": "Inspirada na cultura das cafeterias artesanais, cada xícara convida a desacelerar e apreciar o aroma e o calor do café recém‑preparado.",
+    "pais": "Internacional",
+    "tempoPreparo": "5 min",
+    "dificuldade": "Fácil",
+    "ingredientes": [
+      "1 xícara de café preparado",
+      "Leite ou complemento opcional",
+      "Açúcar ou adoçante a gosto"
+    ],
+    "passos": [
+      "Prepare o café da sua preferência",
+      "Adicione complementos se desejar",
+      "Misture e sirva quente"
+    ],
+    "utensilios": [
+      "Xícara",
+      "Colher",
+      "Método de preparo de café"
+    ],
+    "tags": [
+      "quente",
+      "aromatico",
+      "cafe"
+    ]
+  },
+  {
+    "id": 13,
+    "nome": "Receita de Café 13",
+    "categoria": "Cafés Especiais",
+    "descricao": "Uma bebida de café equilibrada e aromática perfeita para momentos de pausa.",
+    "historia": "Inspirada na cultura das cafeterias artesanais, cada xícara convida a desacelerar e apreciar o aroma e o calor do café recém‑preparado.",
+    "pais": "Internacional",
+    "tempoPreparo": "5 min",
+    "dificuldade": "Fácil",
+    "ingredientes": [
+      "1 xícara de café preparado",
+      "Leite ou complemento opcional",
+      "Açúcar ou adoçante a gosto"
+    ],
+    "passos": [
+      "Prepare o café da sua preferência",
+      "Adicione complementos se desejar",
+      "Misture e sirva quente"
+    ],
+    "utensilios": [
+      "Xícara",
+      "Colher",
+      "Método de preparo de café"
+    ],
+    "tags": [
+      "quente",
+      "aromatico",
+      "cafe"
+    ]
+  },
+  {
+    "id": 14,
+    "nome": "Receita de Café 14",
+    "categoria": "Cafés Especiais",
+    "descricao": "Uma bebida de café equilibrada e aromática perfeita para momentos de pausa.",
+    "historia": "Inspirada na cultura das cafeterias artesanais, cada xícara convida a desacelerar e apreciar o aroma e o calor do café recém‑preparado.",
+    "pais": "Internacional",
+    "tempoPreparo": "5 min",
+    "dificuldade": "Fácil",
+    "ingredientes": [
+      "1 xícara de café preparado",
+      "Leite ou complemento opcional",
+      "Açúcar ou adoçante a gosto"
+    ],
+    "passos": [
+      "Prepare o café da sua preferência",
+      "Adicione complementos se desejar",
+      "Misture e sirva quente"
+    ],
+    "utensilios": [
+      "Xícara",
+      "Colher",
+      "Método de preparo de café"
+    ],
+    "tags": [
+      "quente",
+      "aromatico",
+      "cafe"
+    ]
+  },
+  {
+    "id": 15,
+    "nome": "Receita de Café 15",
+    "categoria": "Cafés Especiais",
+    "descricao": "Uma bebida de café equilibrada e aromática perfeita para momentos de pausa.",
+    "historia": "Inspirada na cultura das cafeterias artesanais, cada xícara convida a desacelerar e apreciar o aroma e o calor do café recém‑preparado.",
+    "pais": "Internacional",
+    "tempoPreparo": "5 min",
+    "dificuldade": "Fácil",
+    "ingredientes": [
+      "1 xícara de café preparado",
+      "Leite ou complemento opcional",
+      "Açúcar ou adoçante a gosto"
+    ],
+    "passos": [
+      "Prepare o café da sua preferência",
+      "Adicione complementos se desejar",
+      "Misture e sirva quente"
+    ],
+    "utensilios": [
+      "Xícara",
+      "Colher",
+      "Método de preparo de café"
+    ],
+    "tags": [
+      "quente",
+      "aromatico",
+      "cafe"
+    ]
+  },
+  {
+    "id": 16,
+    "nome": "Receita de Café 16",
+    "categoria": "Cafés Especiais",
+    "descricao": "Uma bebida de café equilibrada e aromática perfeita para momentos de pausa.",
+    "historia": "Inspirada na cultura das cafeterias artesanais, cada xícara convida a desacelerar e apreciar o aroma e o calor do café recém‑preparado.",
+    "pais": "Internacional",
+    "tempoPreparo": "5 min",
+    "dificuldade": "Fácil",
+    "ingredientes": [
+      "1 xícara de café preparado",
+      "Leite ou complemento opcional",
+      "Açúcar ou adoçante a gosto"
+    ],
+    "passos": [
+      "Prepare o café da sua preferência",
+      "Adicione complementos se desejar",
+      "Misture e sirva quente"
+    ],
+    "utensilios": [
+      "Xícara",
+      "Colher",
+      "Método de preparo de café"
+    ],
+    "tags": [
+      "quente",
+      "aromatico",
+      "cafe"
+    ]
+  },
+  {
+    "id": 17,
+    "nome": "Receita de Café 17",
+    "categoria": "Cafés Especiais",
+    "descricao": "Uma bebida de café equilibrada e aromática perfeita para momentos de pausa.",
+    "historia": "Inspirada na cultura das cafeterias artesanais, cada xícara convida a desacelerar e apreciar o aroma e o calor do café recém‑preparado.",
+    "pais": "Internacional",
+    "tempoPreparo": "5 min",
+    "dificuldade": "Fácil",
+    "ingredientes": [
+      "1 xícara de café preparado",
+      "Leite ou complemento opcional",
+      "Açúcar ou adoçante a gosto"
+    ],
+    "passos": [
+      "Prepare o café da sua preferência",
+      "Adicione complementos se desejar",
+      "Misture e sirva quente"
+    ],
+    "utensilios": [
+      "Xícara",
+      "Colher",
+      "Método de preparo de café"
+    ],
+    "tags": [
+      "quente",
+      "aromatico",
+      "cafe"
+    ]
+  },
+  {
+    "id": 18,
+    "nome": "Receita de Café 18",
+    "categoria": "Cafés Especiais",
+    "descricao": "Uma bebida de café equilibrada e aromática perfeita para momentos de pausa.",
+    "historia": "Inspirada na cultura das cafeterias artesanais, cada xícara convida a desacelerar e apreciar o aroma e o calor do café recém‑preparado.",
+    "pais": "Internacional",
+    "tempoPreparo": "5 min",
+    "dificuldade": "Fácil",
+    "ingredientes": [
+      "1 xícara de café preparado",
+      "Leite ou complemento opcional",
+      "Açúcar ou adoçante a gosto"
+    ],
+    "passos": [
+      "Prepare o café da sua preferência",
+      "Adicione complementos se desejar",
+      "Misture e sirva quente"
+    ],
+    "utensilios": [
+      "Xícara",
+      "Colher",
+      "Método de preparo de café"
+    ],
+    "tags": [
+      "quente",
+      "aromatico",
+      "cafe"
+    ]
+  },
+  {
+    "id": 19,
+    "nome": "Receita de Café 19",
+    "categoria": "Cafés Especiais",
+    "descricao": "Uma bebida de café equilibrada e aromática perfeita para momentos de pausa.",
+    "historia": "Inspirada na cultura das cafeterias artesanais, cada xícara convida a desacelerar e apreciar o aroma e o calor do café recém‑preparado.",
+    "pais": "Internacional",
+    "tempoPreparo": "5 min",
+    "dificuldade": "Fácil",
+    "ingredientes": [
+      "1 xícara de café preparado",
+      "Leite ou complemento opcional",
+      "Açúcar ou adoçante a gosto"
+    ],
+    "passos": [
+      "Prepare o café da sua preferência",
+      "Adicione complementos se desejar",
+      "Misture e sirva quente"
+    ],
+    "utensilios": [
+      "Xícara",
+      "Colher",
+      "Método de preparo de café"
+    ],
+    "tags": [
+      "quente",
+      "aromatico",
+      "cafe"
+    ]
+  },
+  {
+    "id": 20,
+    "nome": "Receita de Café 20",
+    "categoria": "Cafés Especiais",
+    "descricao": "Uma bebida de café equilibrada e aromática perfeita para momentos de pausa.",
+    "historia": "Inspirada na cultura das cafeterias artesanais, cada xícara convida a desacelerar e apreciar o aroma e o calor do café recém‑preparado.",
+    "pais": "Internacional",
+    "tempoPreparo": "5 min",
+    "dificuldade": "Fácil",
+    "ingredientes": [
+      "1 xícara de café preparado",
+      "Leite ou complemento opcional",
+      "Açúcar ou adoçante a gosto"
+    ],
+    "passos": [
+      "Prepare o café da sua preferência",
+      "Adicione complementos se desejar",
+      "Misture e sirva quente"
+    ],
+    "utensilios": [
+      "Xícara",
+      "Colher",
+      "Método de preparo de café"
+    ],
+    "tags": [
+      "quente",
+      "aromatico",
+      "cafe"
+    ]
+  }
+]
