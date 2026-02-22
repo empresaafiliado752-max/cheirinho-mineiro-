@@ -332,6 +332,28 @@ async function startServer() {
     }
   });
 
+  // Delete Recipe
+  app.delete("/api/recipes/:id", (req, res) => {
+    try {
+      db.prepare("DELETE FROM recipes WHERE id = ?").run(req.params.id);
+      db.prepare("DELETE FROM dev_overrides WHERE recipe_id = ?").run(req.params.id);
+      res.json({ success: true });
+    } catch (err) {
+      res.status(500).json({ error: "Failed to delete recipe" });
+    }
+  });
+
+  // Delete All Recipes (Dev only)
+  app.delete("/api/dev/clear-db", (req, res) => {
+    try {
+      db.prepare("DELETE FROM recipes").run();
+      db.prepare("DELETE FROM dev_overrides").run();
+      res.json({ success: true, message: "Database cleared" });
+    } catch (err) {
+      res.status(500).json({ error: "Failed to clear database" });
+    }
+  });
+
   // Dev Mode: Override Image
   app.post("/api/dev/override-image", (req, res) => {
     const { recipeId, imageUrl } = req.body;

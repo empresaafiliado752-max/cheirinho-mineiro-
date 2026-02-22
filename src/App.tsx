@@ -17,7 +17,8 @@ import {
   Sparkles,
   Globe,
   ScrollText,
-  Edit
+  Edit,
+  Trash2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { GoogleGenAI } from "@google/genai";
@@ -228,6 +229,31 @@ export default function App() {
     });
   }, []);
 
+  const handleDeleteRecipe = useCallback(async (id: number) => {
+    if (!confirm("Tem certeza que deseja excluir esta receita?")) return;
+    try {
+      const res = await fetch(`/api/recipes/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        fetchRecipes();
+      }
+    } catch (err) {
+      alert("Erro ao excluir receita");
+    }
+  }, [fetchRecipes]);
+
+  const handleClearDatabase = useCallback(async () => {
+    if (!confirm("ATENÇÃO: Isso irá apagar TODAS as receitas do banco de dados. Deseja continuar?")) return;
+    try {
+      const res = await fetch('/api/dev/clear-db', { method: 'DELETE' });
+      if (res.ok) {
+        fetchRecipes();
+        alert("Banco de dados limpo com sucesso!");
+      }
+    } catch (err) {
+      alert("Erro ao limpar banco de dados");
+    }
+  }, [fetchRecipes]);
+
   const handleAddRecipe = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     const payload = {
@@ -423,19 +449,25 @@ export default function App() {
           <div className="flex flex-col items-center justify-center py-20 gap-4">
             <div className="w-12 h-12 border-4 border-coffee-200 border-t-coffee-900 rounded-full animate-spin"></div>
             <p className="font-serif italic text-coffee-600">Moendo os grãos...</p>
-            {isDev && (
-              <div className="mt-8 p-4 bg-red-50 border border-red-200 rounded-xl text-xs font-mono text-red-600 max-w-md">
-                <p className="font-bold mb-2">Debug Info (Admin Only):</p>
-                <p>Recipes: {recipes.length}</p>
-                <p>Weather: {weather ? 'Loaded' : 'Loading...'}</p>
-                <button 
-                  onClick={() => setLoading(false)}
-                  className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg"
-                >
-                  Forçar Parada do Loading
-                </button>
-              </div>
-            )}
+            <div className="mt-8 flex flex-col items-center gap-4">
+              <button 
+                onClick={() => {
+                  setIsDev(true);
+                  setShowDevPanel(true);
+                  setLoading(false);
+                }}
+                className="px-6 py-2 bg-coffee-100 text-coffee-600 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-coffee-900 hover:text-white transition-all"
+              >
+                Entrar em Modo Desenvolvedor
+              </button>
+              {isDev && (
+                <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-xs font-mono text-red-600 max-w-md">
+                  <p className="font-bold mb-2">Debug Info (Admin Only):</p>
+                  <p>Recipes: {recipes.length}</p>
+                  <p>Weather: {weather ? 'Loaded' : 'Loading...'}</p>
+                </div>
+              )}
+            </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -533,6 +565,31 @@ export default function App() {
         )}
       </main>
 
+      {/* Footer with Dev Access */}
+      <footer className="mt-20 py-12 border-t border-coffee-100 px-6">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-coffee-900 rounded-xl flex items-center justify-center text-white">
+              <Coffee size={20} />
+            </div>
+            <span className="font-serif text-xl text-coffee-900 font-bold">Cheirinho Mineiro</span>
+          </div>
+          
+          <div className="flex items-center gap-6 text-sm text-coffee-400 font-medium">
+            <button 
+              onClick={() => {
+                setIsDev(true);
+                setShowDevPanel(true);
+              }}
+              className="hover:text-coffee-900 transition-colors flex items-center gap-2"
+            >
+              <Settings size={14} /> Modo Desenvolvedor
+            </button>
+            <span>© 2024 • Feito com Alma Brasileira</span>
+          </div>
+        </div>
+      </footer>
+
       {/* Recipe Modal */}
       <AnimatePresence>
         {selectedRecipe && (
@@ -572,13 +629,40 @@ export default function App() {
                     <div className="text-xs font-bold text-coffee-500 uppercase tracking-[0.2em] mb-2">{selectedRecipe.category}</div>
                     <h2 className="text-4xl md:text-5xl font-serif text-coffee-900">{selectedRecipe.name}</h2>
                   </div>
-                  <button 
-                    onClick={() => setSelectedRecipe(null)}
-                    aria-label="Fechar modal"
-                    className="p-3 bg-coffee-100 rounded-2xl text-coffee-900 hover:bg-coffee-200 transition-colors hidden md:block"
-                  >
-                    <X size={20} />
-                  </button>
+                  <div className="flex items-center gap-2">
+                    {isDev && (
+                      <div className="flex items-center gap-2 mr-2">
+                        <button 
+                          onClick={() => {
+                            handleEditClick(selectedRecipe);
+                            setShowDevPanel(true);
+                            setSelectedRecipe(null);
+                          }}
+                          className="p-3 bg-coffee-100 rounded-2xl text-coffee-600 hover:bg-coffee-900 hover:text-white transition-colors"
+                          title="Editar"
+                        >
+                          <Edit size={20} />
+                        </button>
+                        <button 
+                          onClick={() => {
+                            handleDeleteRecipe(selectedRecipe.id);
+                            setSelectedRecipe(null);
+                          }}
+                          className="p-3 bg-red-50 rounded-2xl text-red-600 hover:bg-red-600 hover:text-white transition-colors"
+                          title="Excluir"
+                        >
+                          <Trash2 size={20} />
+                        </button>
+                      </div>
+                    )}
+                    <button 
+                      onClick={() => setSelectedRecipe(null)}
+                      aria-label="Fechar modal"
+                      className="p-3 bg-coffee-100 rounded-2xl text-coffee-900 hover:bg-coffee-200 transition-colors hidden md:block"
+                    >
+                      <X size={20} />
+                    </button>
+                  </div>
                 </div>
 
                 <p className="text-coffee-700 italic font-serif text-lg mb-4 leading-relaxed">
@@ -693,11 +777,42 @@ export default function App() {
             >
               {/* Sidebar / List */}
               <div className="md:w-1/3 bg-coffee-50 border-r border-coffee-100 flex flex-col">
-                <div className="p-8 border-b border-coffee-100">
-                  <h2 className="text-3xl font-serif text-coffee-900 flex items-center gap-3">
-                    <Database className="text-coffee-500" /> Painel Dev
-                  </h2>
-                  <p className="text-coffee-500 text-sm mt-2">Gerencie receitas e imagens do sistema.</p>
+                <div className="p-8 border-b border-coffee-100 flex justify-between items-start">
+                  <div>
+                    <h2 className="text-3xl font-serif text-coffee-900 flex items-center gap-3">
+                      <Database className="text-coffee-500" /> Painel Dev
+                    </h2>
+                    <p className="text-coffee-500 text-sm mt-2">Gerencie receitas e imagens do sistema.</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button 
+                      onClick={() => {
+                        setEditingId(null);
+                        setNewRecipe({
+                          name: '',
+                          description: '',
+                          ingredients: '',
+                          steps: '',
+                          difficulty: 'Fácil',
+                          prep_time: '',
+                          equipment: '',
+                          category: 'Tradicional',
+                          is_brazilian: false,
+                          country: '',
+                          history: ''
+                        });
+                      }}
+                      className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl hover:bg-emerald-600 hover:text-white transition-all flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"
+                    >
+                      <Plus size={14} /> Nova
+                    </button>
+                    <button 
+                      onClick={handleClearDatabase}
+                      className="p-3 bg-red-50 text-red-600 rounded-2xl hover:bg-red-600 hover:text-white transition-all flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"
+                    >
+                      <Trash2 size={14} /> Limpar
+                    </button>
+                  </div>
                 </div>
                 
                 <div className="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
@@ -731,6 +846,13 @@ export default function App() {
                           <Upload size={14} />
                           <input type="file" className="hidden" aria-label="Upload de imagem" accept="image/*" onChange={(e) => handleImageUpload(r.id, e)} />
                         </label>
+                        <button 
+                          onClick={() => handleDeleteRecipe(r.id)}
+                          aria-label={`Excluir ${r.name}`}
+                          className="p-2 bg-red-50 text-red-600 rounded-xl hover:bg-red-600 hover:text-white transition-colors"
+                        >
+                          <Trash2 size={14} />
+                        </button>
                       </div>
                     </div>
                   ))}
