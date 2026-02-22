@@ -54,15 +54,23 @@ export default function App() {
   const categories = useMemo(() => ['Todos', 'Tradicional', 'Mundial', 'Gelado', 'Especial'], []);
 
   const fetchRecipes = useCallback(async () => {
+    console.log("fetchRecipes: Starting...");
     try {
+      // Quick health check
+      const ping = await fetch('/api/ping').catch(() => null);
+      if (ping) console.log("API Ping status:", ping.status);
+      else console.warn("API Ping failed completely");
+
       const res = await fetch('/api/recipes');
+      console.log("fetchRecipes: Response received", res.status);
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const data = await res.json();
-      console.log("Recipes received from API:", data);
+      console.log("fetchRecipes: Data parsed", data.length, "recipes");
       setRecipes(data);
     } catch (err) {
-      console.error("Failed to fetch recipes:", err);
+      console.error("fetchRecipes: Failed", err);
     } finally {
+      console.log("fetchRecipes: Setting loading to false");
       setLoading(false);
     }
   }, []);
@@ -91,14 +99,19 @@ export default function App() {
   }, []);
 
   const fetchWeather = useCallback(() => {
+    console.log("fetchWeather: Starting...");
     if ("geolocation" in navigator) {
+      console.log("fetchWeather: Geolocation supported, requesting position...");
       navigator.geolocation.getCurrentPosition(async (position) => {
+        console.log("fetchWeather: Position received");
         const { latitude, longitude } = position.coords;
         try {
+          console.log("fetchWeather: Fetching weather data...");
           // Fetch Weather Data (Open-Meteo)
           const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
           const weatherData = await weatherRes.json();
           
+          console.log("fetchWeather: Fetching city name...");
           // Fetch City Name (Nominatim) - Using a more specific User-Agent
           const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`, {
             headers: {
@@ -119,14 +132,18 @@ export default function App() {
           else if (code >= 80 && code <= 82) condition = 'Pancadas de Chuva';
           else if (code >= 95) condition = 'Tempestade';
 
+          console.log("fetchWeather: Weather loaded", { temp, condition, city });
           setWeather({ temp, condition, city });
         } catch (err) {
+          console.error("fetchWeather: API failed", err);
           setWeather({ temp: 22, condition: 'Nublado', city: 'Brasil' });
         }
       }, (err) => {
+        console.warn("fetchWeather: Geolocation failed or denied", err);
         setWeather({ temp: 20, condition: 'Nublado', city: 'Brasil' });
       }, { timeout: 5000 });
     } else {
+      console.warn("fetchWeather: Geolocation not supported");
       setWeather({ temp: 20, condition: 'Nublado', city: 'Brasil' });
     }
   }, []);
@@ -138,8 +155,22 @@ export default function App() {
       setIsDev(true);
     }
 
+    console.log("App mounted: Triggering initial fetches");
     fetchRecipes();
     fetchWeather();
+
+    // Safety timeout: if still loading after 5 seconds, force stop
+    const timer = setTimeout(() => {
+      setLoading(current => {
+        if (current) {
+          console.warn("Safety timeout: Force stopping loading state");
+          return false;
+        }
+        return current;
+      });
+    }, 5000);
+
+    return () => clearTimeout(timer);
   }, [fetchRecipes, fetchWeather]);
 
   useEffect(() => {
@@ -392,6 +423,19 @@ export default function App() {
           <div className="flex flex-col items-center justify-center py-20 gap-4">
             <div className="w-12 h-12 border-4 border-coffee-200 border-t-coffee-900 rounded-full animate-spin"></div>
             <p className="font-serif italic text-coffee-600">Moendo os grãos...</p>
+            {isDev && (
+              <div className="mt-8 p-4 bg-red-50 border border-red-200 rounded-xl text-xs font-mono text-red-600 max-w-md">
+                <p className="font-bold mb-2">Debug Info (Admin Only):</p>
+                <p>Recipes: {recipes.length}</p>
+                <p>Weather: {weather ? 'Loaded' : 'Loading...'}</p>
+                <button 
+                  onClick={() => setLoading(false)}
+                  className="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg"
+                >
+                  Forçar Parada do Loading
+                </button>
+              </div>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

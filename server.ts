@@ -7,9 +7,16 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const dbPath = path.join(__dirname, "recipes_v2.db");
-console.log(`Using database at: ${dbPath}`);
-const db = new Database(dbPath);
+let db: any;
+try {
+  const dbPath = path.join(__dirname, "recipes_v2.db");
+  console.log(`Using database at: ${dbPath}`);
+  db = new Database(dbPath);
+  db.pragma('journal_mode = WAL');
+} catch (err) {
+  console.error("Failed to initialize database file, falling back to memory:", err);
+  db = new Database(":memory:");
+}
 
 // Initialize DB
 db.exec(`
@@ -164,6 +171,10 @@ async function startServer() {
   app.use((req, res, next) => {
     console.log(`${req.method} ${req.url}`);
     next();
+  });
+
+  app.get("/api/ping", (req, res) => {
+    res.json({ status: "pong", time: new Date().toISOString() });
   });
 
   // Debug Route
@@ -350,7 +361,7 @@ async function startServer() {
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server fully initialized and running on http://localhost:${PORT}`);
   });
 }
 
