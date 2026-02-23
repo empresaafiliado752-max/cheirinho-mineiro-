@@ -32,7 +32,10 @@ export default function App() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [isDev, setIsDev] = useState(false);
   const [showDevPanel, setShowDevPanel] = useState(false);
+  const [showBulkImport, setShowBulkImport] = useState(false);
+  const [bulkJson, setBulkJson] = useState('');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [aiSuggestion, setAiSuggestion] = useState<Recipe | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
 
@@ -56,6 +59,7 @@ export default function App() {
 
   const fetchRecipes = useCallback(async () => {
     console.log("fetchRecipes: Starting...");
+    setError(null);
     try {
       // Quick health check
       const ping = await fetch('/api/ping').catch(() => null);
@@ -64,12 +68,17 @@ export default function App() {
 
       const res = await fetch('/api/recipes');
       console.log("fetchRecipes: Response received", res.status);
-      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const data = await res.json();
+      
+      if (!res.ok) {
+        throw new Error(data.error || data.details || `HTTP error! status: ${res.status}`);
+      }
+      
       console.log("fetchRecipes: Data parsed", data.length, "recipes");
       setRecipes(data);
     } catch (err) {
       console.error("fetchRecipes: Failed", err);
+      setError(err instanceof Error ? err.message : String(err));
     } finally {
       console.log("fetchRecipes: Setting loading to false");
       setLoading(false);
@@ -261,22 +270,48 @@ export default function App() {
     }
   }, [fetchRecipes]);
 
-  const handleImportDataset = useCallback(async () => {
-    if (!confirm("Deseja importar as receitas do arquivo JSON?")) return;
+  const handleBulkImport = useCallback(async () => {
     try {
-      const res = await fetch('/api/dev/import-dataset', { method: 'POST' });
-      if (res.ok) {
-        const data = await res.json();
-        fetchRecipes();
-        alert(`Sucesso! ${data.count} receitas importadas.`);
-      } else {
-        const err = await res.json();
-        alert(`Erro: ${err.error}`);
+      const recipesToImport = JSON.parse(bulkJson);
+      if (!Array.isArray(recipesToImport)) {
+        alert("O JSON deve ser um array de objetos.");
+        return;
       }
+
+      if (!confirm(`Deseja importar ${recipesToImport.length} receitas?`)) return;
+
+      let successCount = 0;
+      for (const r of recipesToImport) {
+        const payload = {
+          name: r.nome || r.name,
+          description: r.descricao || r.description || "",
+          ingredients: r.ingredientes || r.ingredients || [],
+          steps: r.passos || r.steps || [],
+          difficulty: r.dificuldade || r.difficulty || "Fácil",
+          prep_time: r.tempoPreparo || r.prep_time || "5 min",
+          equipment: r.utensilios || r.equipment || [],
+          category: r.categoria || r.category || "Tradicional",
+          is_brazilian: !!r.is_brazilian,
+          country: r.pais || r.country || "",
+          history: r.historia || r.history || ""
+        };
+
+        const res = await fetch('/api/recipes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (res.ok) successCount++;
+      }
+
+      alert(`${successCount} receitas importadas com sucesso!`);
+      setBulkJson('');
+      setShowBulkImport(false);
+      fetchRecipes();
     } catch (err) {
-      alert("Erro ao importar dataset");
+      alert("Erro ao processar JSON: " + (err instanceof Error ? err.message : String(err)));
     }
-  }, [fetchRecipes]);
+  }, [bulkJson, fetchRecipes]);
 
   const handleAddRecipe = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
@@ -447,6 +482,20 @@ export default function App() {
           </motion.div>
         )}
       </div>
+
+      {/* Error Message */}
+      {error && (
+        <div className="px-6 pt-16 max-w-7xl mx-auto">
+          <div className="p-4 bg-red-50 border border-red-100 rounded-2xl text-red-600 flex items-center gap-3">
+            <X className="flex-shrink-0" size={20} />
+            <div>
+              <p className="font-bold">Erro ao carregar receitas</p>
+              <p className="text-sm opacity-90">{error}</p>
+              <p className="text-xs mt-1">Verifique se as variáveis SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY estão configuradas no ambiente do AI Studio.</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Category Tabs */}
       <div className="px-6 pt-16 pb-8 max-w-7xl mx-auto flex justify-center">
@@ -831,11 +880,11 @@ export default function App() {
                       <Plus size={14} /> Nova
                     </button>
                     <button 
-                      onClick={handleImportDataset}
+                      onClick={() => setShowBulkImport(true)}
                       className="p-3 bg-blue-50 text-blue-600 rounded-2xl hover:bg-blue-600 hover:text-white transition-all flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"
-                      title="Importar de /data/cafes_100_receitas.json"
+                      title="Importação em Massa (JSON)"
                     >
-                      <Database size={14} /> Importar
+                      <ScrollText size={14} /> Massa
                     </button>
                     <button 
                       onClick={handleClearDatabase}
@@ -932,7 +981,38 @@ export default function App() {
                 </div>
 
                 <form onSubmit={handleAddRecipe} className="space-y-8">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {showBulkImport ? (
+                    <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
+                      <div className="p-6 bg-blue-50 border border-blue-100 rounded-[32px]">
+                        <h4 className="text-blue-900 font-bold uppercase tracking-widest text-xs mb-2">Importação em Massa</h4>
+                        <p className="text-blue-700 text-sm mb-4">Cole aqui um array JSON de receitas. O sistema tentará mapear os campos automaticamente.</p>
+                        <textarea 
+                          className="w-full h-96 p-4 bg-white rounded-2xl border border-blue-200 font-mono text-xs focus:outline-none focus:ring-2 focus:ring-blue-300"
+                          placeholder='[{"nome": "Café...", "ingredientes": ["..."], ...}]'
+                          value={bulkJson}
+                          onChange={e => setBulkJson(e.target.value)}
+                        />
+                        <div className="flex gap-3 mt-6">
+                          <button 
+                            type="button"
+                            onClick={handleBulkImport}
+                            className="flex-1 py-4 bg-blue-600 text-white rounded-2xl font-bold uppercase tracking-widest hover:bg-blue-700 transition-colors"
+                          >
+                            Processar Importação
+                          </button>
+                          <button 
+                            type="button"
+                            onClick={() => setShowBulkImport(false)}
+                            className="px-8 py-4 bg-white text-blue-600 border border-blue-200 rounded-2xl font-bold uppercase tracking-widest hover:bg-blue-50 transition-colors"
+                          >
+                            Voltar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label className="text-xs font-bold text-coffee-400 uppercase tracking-widest">Nome da Receita</label>
                       <input 
@@ -1057,7 +1137,9 @@ export default function App() {
                   >
                     {editingId ? 'Atualizar Receita' : 'Salvar Receita'}
                   </button>
-                </form>
+                </>
+              )}
+            </form>
               </div>
             </motion.div>
           </motion.div>
